@@ -23755,7 +23755,7 @@ function uint8ToBase64(uint8Array) {
 						if (e.signFile.data.length) {
 							isDocumentSignedSuccess = true
 							const base64String = uint8ToBase64(e.signFile.data)
-							console.log('base64String', base64String)
+							// console.log('base64String', base64String)
 							sendSignedDataToParent(base64String)
 						}
 						for (
