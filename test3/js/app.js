@@ -23989,6 +23989,55 @@ function uint8ToBase64(uint8Array) {
 							this.SetError(''),
 							this.ShowForm('#signBlock', !1)
 					}),
+					(e.prototype.SignAllFilesCAdESDetached = function (
+						lib,
+						filesData,
+						signAlgo,
+						hashAlgo
+					) {
+						console.log('filesData555', filesData)
+						var results = []
+						var chain = Promise.resolve()
+
+						filesData.forEach(function (fd, currInd) {
+							console.log('currInd', currInd)
+							chain = chain
+								.then(function () {
+									// 1) Хешуємо конкретний файл
+									return lib.HashData(hashAlgo, fd.data, !1)
+								})
+								.then(function (hash) {
+									// 2) Підписуємо хеш (CAdES Detached)
+									return lib.SignHash(
+										signAlgo,
+										{
+											name: fd.name,
+											val: hash,
+										},
+										!0,
+										!1
+									)
+								})
+								.then(function (sign) {
+									let signBytes = sign.val || sign
+									let signBase64 = uint8ToBase64(signBytes)
+									console.log('fd', fd)
+									console.log('mfId', fileForSign[currInd].mfId)
+
+									results.push({
+										mfId: fileForSign[currInd].mfId,
+										fileName: fd.name + '.p7',
+										signBytes: signBytes,
+										signBase64: signBase64,
+										size: signBytes.length,
+									})
+								})
+						})
+
+						return chain.then(function () {
+							return results
+						})
+					}),
 					(e.prototype.OnSignFile = function () {
 						console.log('onsign')
 						var e = this,
@@ -24035,17 +24084,27 @@ function uint8ToBase64(uint8Array) {
 									signContainerInfo: null,
 								})
 						console.log('R', R)
-						console.log()
 						if ('' != m)
 							if ('' != g)
 								if (
 									R.length > 1 &&
 									n != N.ASiCE &&
 									(n != N.XAdES ||
-										S != i.EndUserConstants.EndUserXAdESType.Detached)
-								)
+										S != i.EndUserConstants.EndUserXAdESType.Detached) &&
+									!(
+										n == N.CAdES &&
+										s == i.EndUserConstants.EndUserCAdESType.Detached
+									)
+								) {
+									// if (
+									// 	R.length > 1 &&
+									// 	n != N.ASiCE &&
+									// 	(n != N.XAdES ||
+									// 		S != i.EndUserConstants.EndUserXAdESType.Detached)
+									// )
+									// 	e.SetError(p(o.ERROR_SIGN_MULTIPLE_FILES_NOT_SUPPORTED))
 									e.SetError(p(o.ERROR_SIGN_MULTIPLE_FILES_NOT_SUPPORTED))
-								else if (
+								} else if (
 									(n != N.CAdES ||
 										(n == N.CAdES &&
 											s != i.EndUserConstants.EndUserCAdESType.Detached)) &&
@@ -24073,14 +24132,56 @@ function uint8ToBase64(uint8Array) {
 												i.EndUserConstants.EU_SIGN_TYPE_PARAMETER,
 												a
 											)
-											.then(function () {
-												return e.ReadFiles(R)
-											})
-											.then(function (e) {
-												return (
-													(I.filesData = e),
-													A ? t.GetLibrary().HashData(c, e[0].data, !1) : null
-												)
+											// .then(function () {
+											// 	return e.ReadFiles(R)
+											// })
+											// .then(function (e) {
+											// 	return (
+											// 		(I.filesData = e),
+											// 		A ? t.GetLibrary().HashData(c, e[0].data, !1) : null
+											// 	)
+											// })
+											.then(async function () {
+												// return e.ReadFiles(R)
+												const filesArr = await e.ReadFiles(R)
+												console.log('filesArr', filesArr)
+												I.filesData = filesArr
+												if (A && I.filesData.length > 1) {
+													e.SignAllFilesCAdESDetached(
+														t.GetLibrary(),
+														I.filesData,
+														r, // signAlgo
+														c // hashAlgo
+													).then(function (results) {
+														console.log('results', results)
+														// Тут у тебе ВСІ файли з підписами в base64
+														// results = [{ fileName, signBytes, signBase64 }, ...]
+
+														// ✅ Віддати все в M-Files (або куди треба)
+														// origin підстав, який у тебе використовується (self.m_mainPageOrigin або '*')
+														// window.parent.postMessage(
+														// 	{
+														// 		type: 'signed-data-multi',
+														// 		files: results,
+														// 	},
+														// 	this.m_mainPageOrigin || '*'
+														// )
+
+														// e.CloseDimmerView()
+														// e.StopOperationConfirmation()
+
+														// Обірвати стандартний ланцюжок .then(), щоб не йти в SetSignFileResult
+														// throw '__MULTI_CADES_DONE__'
+													})
+												}
+												return A
+													? t.GetLibrary().HashData(c, filesArr[0].data, !1)
+													: null
+
+												// return (
+												// 	(I.filesData = e),
+												// 	A ? t.GetLibrary().HashData(c, e[0].data, !1) : null
+												// )
 											})
 											.then(function (e) {
 												return (
