@@ -2,7 +2,7 @@ let fileForSign
 let isDocumentSignedSuccess = false
 let fileName = ''
 let isItStamp = false
-let results = []
+let resultsArr = []
 
 window.addEventListener('message', event => {
 	console.log('event', event.data.isItStamp)
@@ -24027,6 +24027,7 @@ function uint8ToBase64(uint8Array) {
 						var chain = Promise.resolve()
 
 						filesData.forEach(function (fd, currInd) {
+							let results = []
 							console.log('currInd', currInd)
 							chain = chain
 								.then(function () {
@@ -24180,7 +24181,9 @@ function uint8ToBase64(uint8Array) {
 														r, // signAlgo
 														c // hashAlgo
 													).then(function (results) {
+														resultsArr = [...results]
 														console.log('results', results)
+														console.log('resultsArr', resultsArr)
 														// Тут у тебе ВСІ файли з підписами в base64
 														// results = [{ fileName, signBytes, signBase64 }, ...]
 
