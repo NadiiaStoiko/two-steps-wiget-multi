@@ -23907,7 +23907,7 @@ function uint8ToBase64(uint8Array) {
 								},
 								// saveDataFileButton: c,
 								// saveSignFileButton: o,
-								// saveReportFileButton: f,
+								saveReportFileButton: f,
 								libraryVersion: LIBRARY_VERSION,
 							},
 						}
