@@ -24035,6 +24035,7 @@ function uint8ToBase64(uint8Array) {
 								})
 								.then(function (hash) {
 									// 2) Підписуємо хеш (CAdES Detached)
+									console.log('hash', hash)
 									return lib.SignHash(
 										signAlgo,
 										{
@@ -24210,9 +24211,9 @@ function uint8ToBase64(uint8Array) {
 														throw '__MULTI_CADES_DONE__'
 													})
 												}
-												return A
-													? t.GetLibrary().HashData(c, filesArr[0].data, !1)
-													: null
+												// return A
+												// 	? t.GetLibrary().HashData(c, filesArr[0].data, !1)
+												// 	: null
 
 												// return (
 												// 	(I.filesData = e),
