@@ -2,12 +2,16 @@ let fileForSign
 let isDocumentSignedSuccess = false
 let fileName = ''
 let isItStamp = false
+let isItMulti = false
 let resultsArr = []
 
 window.addEventListener('message', event => {
 	console.log('event', event.data.isItStamp)
 	if (event.data.file) {
 		fileForSign = event.data.file
+	}
+	if (fileForSign?.length > 1) {
+		isItMulti = true
 	}
 	if (event.data.isItStamp) {
 		isItStamp = true
@@ -21833,9 +21837,19 @@ function uint8ToBase64(uint8Array) {
 									$('#pkBlock').hide()
 								break
 							case '#resultBlock':
-								isItStamp
-									? $('#titleLabel').text('👍 Печатку накладено')
-									: $('#titleLabel').text('👍 Документ підписано')
+								if (isItStamp) {
+									isItMulti
+										? $('#titleLabel').text(
+												'👍 Печатку на всі документи успішно накладено'
+										  )
+										: $('#titleLabel').text('👍 Печатку накладено')
+								} else {
+									isItMulti
+										? $('#titleLabel').text(
+												'👍 Всі документи успішно підписано'
+										  )
+										: $('#titleLabel').text('👍 Документ підписано')
+								}
 								$('#titleLabel').is(':visible')
 									? ($('#titleBlock').show(), $('#subTitleLabel').show())
 									: ($('#titleBlock').hide(), $('#subTitleLabel').hide()),
@@ -24182,20 +24196,6 @@ function uint8ToBase64(uint8Array) {
 															console.log('results', results)
 															console.log('resultsArr', resultsArr)
 														}
-
-														// Тут у тебе ВСІ файли з підписами в base64
-														// results = [{ fileName, signBytes, signBase64 }, ...]
-
-														// ✅ Віддати все в M-Files (або куди треба)
-														// origin підстав, який у тебе використовується (self.m_mainPageOrigin або '*')
-														// window.parent.postMessage(
-														// 	{
-														// 		type: 'signed-data-multi',
-														// 		files: results,
-														// 	},
-														// 	this.m_mainPageOrigin || '*'
-														// )
-
 														// e.CloseDimmerView()
 														// e.StopOperationConfirmation()
 
