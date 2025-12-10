@@ -24025,9 +24025,8 @@ function uint8ToBase64(uint8Array) {
 					) {
 						console.log('filesData555', filesData)
 						var chain = Promise.resolve()
-
+						let results = []
 						filesData.forEach(function (fd, currInd) {
-							let results = []
 							console.log('currInd', currInd)
 							chain = chain
 								.then(function () {
