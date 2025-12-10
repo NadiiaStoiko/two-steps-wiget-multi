@@ -56,16 +56,6 @@ function sendSignedDataToParent(stringBase64) {
 		},
 		'*' // або вкажи конкретний origin замість '*', наприклад: 'http://localhost:81'
 	)
-
-	// window.parent.postMessage(
-	// 	{
-	// 		type: 'signed-data',
-	// 		stringBase64,
-	// 		isDocumentSignedSuccess,
-	// 		signedFileName,
-	// 	},
-	// 	'*'
-	// )
 }
 
 function filesArrCreator() {
@@ -87,19 +77,6 @@ function filesArrCreator() {
 }
 
 function getFile() {
-	// var ext = getMimeType(fileForSign?.extension)
-	// var base64Data = fileForSign.file
-	// const byteCharacters = atob(base64Data)
-	// const byteNumbers = new Array(byteCharacters.length)
-	// for (let i = 0; i < byteCharacters.length; i++) {
-	// 	byteNumbers[i] = byteCharacters.charCodeAt(i)
-	// }
-	// const byteArray = new Uint8Array(byteNumbers)
-	// const file = new File([byteArray], fileForSign.fileName, { type: ext })
-
-	// const dataTransfer = new DataTransfer()
-	// dataTransfer.items.add(file)
-
 	document.getElementById('signFilesInput').files = filesArrCreator()
 	let fl = $('#signFilesInput').prop('files')
 	// console.log('file', file)
@@ -20512,8 +20489,6 @@ function uint8ToBase64(uint8Array) {
 								$('#signTypeCAdESSelect').val('1')
 							})
 							getFile()
-							// console.log('99', $('#signFilesInput').prop('files')[0].name)
-
 							$('#signFilesSelectedList').append(
 								'<li>' +
 									this.SanitizeHTML(
@@ -21344,16 +21319,7 @@ function uint8ToBase64(uint8Array) {
 								)
 							})
 					}),
-					(e.prototype.SetSignFileResult = function (
-						e, //!!!!
-						t,
-						n,
-						r,
-						i,
-						s,
-						a,
-						u
-					) {
+					(e.prototype.SetSignFileResult = function (e, t, n, r, i, s, a, u) {
 						var l = this,
 							c = $('<div>'),
 							_ = $('<div class="SignResult">'),
@@ -21591,7 +21557,6 @@ function uint8ToBase64(uint8Array) {
 										  $('#pkReadKMButton').attr('disabled', !0))
 								break
 							case '#preSignBlock':
-								//!!!!
 								break
 							case '#signBlock':
 								var t =
@@ -21990,7 +21955,6 @@ function uint8ToBase64(uint8Array) {
 							this.SetStatus(n, !0)
 					}),
 					(e.prototype.SetResult = function (e, t) {
-						// console.log('eee', e[0])
 						void 0 === e && (e = null),
 							void 0 === t && (t = null),
 							$('#resultContentBlock').empty(),
@@ -23765,7 +23729,6 @@ function uint8ToBase64(uint8Array) {
 							? this.ShowForm('#pkInfoBlock', !1)
 							: this.OnResetPKey()
 					}),
-					//!!!!
 					(e.prototype.makeFileDownloadHTML = function (e, t, n, r) {
 						return (
 							'<div id="' +
@@ -23942,9 +23905,9 @@ function uint8ToBase64(uint8Array) {
 									noTSPWarning: T,
 									advancedWarning: A,
 								},
-								saveDataFileButton: c,
-								saveSignFileButton: o,
-								saveReportFileButton: f,
+								// saveDataFileButton: c,
+								// saveSignFileButton: o,
+								// saveReportFileButton: f,
 								libraryVersion: LIBRARY_VERSION,
 							},
 						}
@@ -24037,7 +24000,6 @@ function uint8ToBase64(uint8Array) {
 						signAlgo,
 						hashAlgo
 					) {
-						// console.log('filesData555', filesData)
 						var chain = Promise.resolve()
 						var results = []
 						filesData.forEach(function (fd, currInd) {
