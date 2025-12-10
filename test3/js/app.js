@@ -24047,6 +24047,7 @@ function uint8ToBase64(uint8Array) {
 									)
 								})
 								.then(function (sign) {
+									console.log('sign.val', sign.val)
 									let signBytes = sign.val || sign
 									let signBase64 = uint8ToBase64(signBytes)
 									console.log('fd', fd)
