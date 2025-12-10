@@ -29,7 +29,10 @@ function fileNameCreatorUtil(certInfo) {
 
 function sendSignedDataToParent(stringBase64) {
 	console.log('fileForSign', fileForSign)
-	const signedFileName = `${fileForSign.mfId}_${fileName}`
+	let signedFileName
+	if (fileForSign === 1) {
+	}
+	signedFileName = `${fileForSign[0].mfId}_${fileName}`
 	window.parent.postMessage(
 		{
 			type: 'signed-data',
@@ -23754,9 +23757,11 @@ function uint8ToBase64(uint8Array) {
 						console.log('e.signFile', e.signFile)
 						if (e.signFile.data.length) {
 							isDocumentSignedSuccess = true
-							const base64String = uint8ToBase64(e.signFile.data)
 							// console.log('base64String', base64String)
-							sendSignedDataToParent(base64String)
+							if (fileForSign.length === 1) {
+								// const base64String = uint8ToBase64(e.signFile.data)
+								sendSignedDataToParent(uint8ToBase64(e.signFile.data))
+							}
 						}
 						for (
 							var t = new Date(),
