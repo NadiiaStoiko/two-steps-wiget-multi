@@ -30,25 +30,38 @@ function fileNameCreatorUtil(certInfo) {
 
 function sendSignedDataToParent(stringBase64) {
 	console.log('fileForSign', fileForSign)
-	let signedFileName
+	let signedFilesArr = []
 	if (fileForSign.length === 1) {
-		signedFileName = `${fileForSign[0].mfId}_${fileName}`
+		signedFilesArr.push({
+			name: `${fileForSign[0].mfId}_${fileName}`,
+			content: stringBase64,
+		})
 	} else {
-		signedFileName = []
 		results.forEach(document => {
-			signedFileName.push(`${document.mfId}_${fileName}`)
+			signedFilesArr.push({
+				name: `${document.mfId}_${fileName}`,
+				content: document.signBase64,
+			})
 		})
 	}
 
 	window.parent.postMessage(
 		{
 			type: 'signed-data',
-			stringBase64,
-			isDocumentSignedSuccess,
-			signedFileName,
+			signatures: signedFilesArr,
 		},
 		'*' // або вкажи конкретний origin замість '*', наприклад: 'http://localhost:81'
 	)
+
+	// window.parent.postMessage(
+	// 	{
+	// 		type: 'signed-data',
+	// 		stringBase64,
+	// 		isDocumentSignedSuccess,
+	// 		signedFileName,
+	// 	},
+	// 	'*'
+	// )
 }
 
 function filesArrCreator() {
