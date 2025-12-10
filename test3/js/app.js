@@ -24180,9 +24180,12 @@ function uint8ToBase64(uint8Array) {
 														r, // signAlgo
 														c // hashAlgo
 													).then(function (results) {
-														resultsArr = [...results]
-														console.log('results', results)
-														console.log('resultsArr', resultsArr)
+														if (results) {
+															resultsArr = [...results]
+															console.log('results', results)
+															console.log('resultsArr', resultsArr)
+														}
+
 														// Тут у тебе ВСІ файли з підписами в base64
 														// results = [{ fileName, signBytes, signBase64 }, ...]
 
