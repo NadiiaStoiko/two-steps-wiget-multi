@@ -24023,7 +24023,7 @@ function uint8ToBase64(uint8Array) {
 						signAlgo,
 						hashAlgo
 					) {
-						console.log('filesData555', filesData)
+						// console.log('filesData555', filesData)
 						var chain = Promise.resolve()
 						var results = []
 						filesData.forEach(function (fd, currInd) {
@@ -24047,12 +24047,6 @@ function uint8ToBase64(uint8Array) {
 								.then(function (sign) {
 									let signBytes = sign.val || sign
 									let signBase64 = uint8ToBase64(signBytes)
-									console.log('fd', fd)
-									console.log('mfId', fileForSign[currInd].mfId)
-									console.log(
-										'signBase64 short',
-										signBase64.slice(0, 40) + '...'
-									)
 
 									results.push({
 										mfId: fileForSign[currInd].mfId,
@@ -24065,14 +24059,6 @@ function uint8ToBase64(uint8Array) {
 						})
 
 						return chain.then(function () {
-							if (results.length >= 2) {
-								console.log('len[0] =', results[0].signBase64.length)
-								console.log('len[1] =', results[1].signBase64.length)
-								console.log(
-									'signBase64[0] === signBase64[1] ?',
-									results[0].signBase64 === results[1].signBase64
-								)
-							}
 							return results
 						})
 					}),
@@ -24217,9 +24203,9 @@ function uint8ToBase64(uint8Array) {
 														throw '__MULTI_CADES_DONE__'
 													})
 												}
-												// return A
-												// 	? t.GetLibrary().HashData(c, filesArr[0].data, !1)
-												// 	: null
+												return A
+													? t.GetLibrary().HashData(c, filesArr[0].data, !1)
+													: null
 
 												// return (
 												// 	(I.filesData = e),
