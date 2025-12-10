@@ -23756,8 +23756,9 @@ function uint8ToBase64(uint8Array) {
 							isDocumentSignedSuccess = true
 							// console.log('base64String', base64String)
 							if (fileForSign.length === 1) {
-								// const base64String = uint8ToBase64(e.signFile.data)
-								sendSignedDataToParent(uint8ToBase64(e.signFile.data))
+								const base64String = uint8ToBase64(e.signFile.data)
+								console.log('base64String from wiget', base64String)
+								sendSignedDataToParent(base64String)
 							}
 							if (resultsArr.length) {
 								sendSignedDataToParent('')
