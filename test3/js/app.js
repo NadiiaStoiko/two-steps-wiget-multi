@@ -24050,6 +24050,10 @@ function uint8ToBase64(uint8Array) {
 									let signBase64 = uint8ToBase64(signBytes)
 									console.log('fd', fd)
 									console.log('mfId', fileForSign[currInd].mfId)
+									console.log(
+										'signBase64 short',
+										signBase64.slice(0, 40) + '...'
+									)
 
 									results.push({
 										mfId: fileForSign[currInd].mfId,
@@ -24203,7 +24207,7 @@ function uint8ToBase64(uint8Array) {
 														// e.StopOperationConfirmation()
 
 														// Обірвати стандартний ланцюжок .then(), щоб не йти в SetSignFileResult
-														// throw '__MULTI_CADES_DONE__'
+														throw '__MULTI_CADES_DONE__'
 													})
 												}
 												return A
