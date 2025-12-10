@@ -24027,7 +24027,6 @@ function uint8ToBase64(uint8Array) {
 						var chain = Promise.resolve()
 						var results = []
 						filesData.forEach(function (fd, currInd) {
-							console.log('currInd', currInd)
 							chain = chain
 								.then(function () {
 									// 1) Хешуємо конкретний файл
@@ -24035,7 +24034,6 @@ function uint8ToBase64(uint8Array) {
 								})
 								.then(function (hash) {
 									// 2) Підписуємо хеш (CAdES Detached)
-									console.log('hash', hash)
 									return lib.SignHash(
 										signAlgo,
 										{
@@ -24047,7 +24045,6 @@ function uint8ToBase64(uint8Array) {
 									)
 								})
 								.then(function (sign) {
-									console.log('sign.val', sign.val)
 									let signBytes = sign.val || sign
 									let signBase64 = uint8ToBase64(signBytes)
 									console.log('fd', fd)
@@ -24068,6 +24065,14 @@ function uint8ToBase64(uint8Array) {
 						})
 
 						return chain.then(function () {
+							if (results.length >= 2) {
+								console.log('len[0] =', results[0].signBase64.length)
+								console.log('len[1] =', results[1].signBase64.length)
+								console.log(
+									'signBase64[0] === signBase64[1] ?',
+									results[0].signBase64 === results[1].signBase64
+								)
+							}
 							return results
 						})
 					}),
