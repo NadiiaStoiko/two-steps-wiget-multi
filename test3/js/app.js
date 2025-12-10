@@ -23782,7 +23782,7 @@ function uint8ToBase64(uint8Array) {
 								// const base64String = uint8ToBase64(e.signFile.data)
 								sendSignedDataToParent(uint8ToBase64(e.signFile.data))
 							}
-							if (results.length) {
+							if (resultsArr.length) {
 								sendSignedDataToParent('')
 							}
 						}
@@ -24025,7 +24025,7 @@ function uint8ToBase64(uint8Array) {
 					) {
 						console.log('filesData555', filesData)
 						var chain = Promise.resolve()
-						let results = []
+						var results = []
 						filesData.forEach(function (fd, currInd) {
 							console.log('currInd', currInd)
 							chain = chain
