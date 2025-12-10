@@ -37,7 +37,7 @@ function sendSignedDataToParent(stringBase64) {
 			content: stringBase64,
 		})
 	} else {
-		results.forEach(document => {
+		resultsArr.forEach(document => {
 			signedFilesArr.push({
 				name: `${document.mfId}_${fileName}`,
 				content: document.signBase64,
