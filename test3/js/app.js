@@ -31,7 +31,7 @@ function fileNameCreatorUtil(certInfo) {
 function sendSignedDataToParent(stringBase64) {
 	console.log('fileForSign', fileForSign)
 	let signedFileName
-	if (fileForSign === 1) {
+	if (fileForSign.length === 1) {
 		signedFileName = `${fileForSign[0].mfId}_${fileName}`
 	} else {
 		signedFileName = []
