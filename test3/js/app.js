@@ -2,6 +2,7 @@ let fileForSign
 let isDocumentSignedSuccess = false
 let fileName = ''
 let isItStamp = false
+let results = []
 
 window.addEventListener('message', event => {
 	console.log('event', event.data.isItStamp)
@@ -31,8 +32,14 @@ function sendSignedDataToParent(stringBase64) {
 	console.log('fileForSign', fileForSign)
 	let signedFileName
 	if (fileForSign === 1) {
+		signedFileName = `${fileForSign[0].mfId}_${fileName}`
+	} else {
+		signedFileName = []
+		results.forEach(document => {
+			signedFileName.push(`${document.mfId}_${fileName}`)
+		})
 	}
-	signedFileName = `${fileForSign[0].mfId}_${fileName}`
+
 	window.parent.postMessage(
 		{
 			type: 'signed-data',
@@ -23762,6 +23769,9 @@ function uint8ToBase64(uint8Array) {
 								// const base64String = uint8ToBase64(e.signFile.data)
 								sendSignedDataToParent(uint8ToBase64(e.signFile.data))
 							}
+							if (results.length) {
+								sendSignedDataToParent('')
+							}
 						}
 						for (
 							var t = new Date(),
@@ -24001,7 +24011,6 @@ function uint8ToBase64(uint8Array) {
 						hashAlgo
 					) {
 						console.log('filesData555', filesData)
-						var results = []
 						var chain = Promise.resolve()
 
 						filesData.forEach(function (fd, currInd) {
