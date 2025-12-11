@@ -8,8 +8,13 @@ let resultsArr = []
 window.addEventListener('message', event => {
 	console.log('event', event.data.isItStamp)
 	if (event.data.file) {
-		fileForSign = event.data.file
+		if (event.data.file.length) {
+			fileForSign = event.data.file
+		} else {
+			passErrorToMFiles()
+		}
 	}
+
 	if (fileForSign?.length > 1) {
 		isItMulti = true
 	}
@@ -58,22 +63,38 @@ function sendSignedDataToParent(stringBase64) {
 	)
 }
 
+function passErrorToMFiles() {
+	window.parent.postMessage(
+		{
+			type: 'signed-data-error',
+			errMsg:
+				'Нажаль передача файлів не відбулась, спобуйте, будь-ласка ще раз',
+		},
+		'*'
+	)
+}
+
 function filesArrCreator() {
 	const dataTransfer = new DataTransfer()
-	fileForSign.forEach(fileInfo => {
-		var ext = getMimeType(fileInfo?.extension)
-		var base64Data = fileInfo.file
-		const byteCharacters = atob(base64Data)
-		const byteNumbers = new Array(byteCharacters.length)
-		for (let i = 0; i < byteCharacters.length; i++) {
-			byteNumbers[i] = byteCharacters.charCodeAt(i)
-		}
-		const byteArray = new Uint8Array(byteNumbers)
-		const file = new File([byteArray], fileInfo.fileName, { type: ext })
-		dataTransfer.items.add(file)
-	})
-	console.log('dataTransfer.files', dataTransfer.files)
-	return dataTransfer.files
+	console.log('filesArrCreator')
+	if (fileForSign.length) {
+		fileForSign.forEach(fileInfo => {
+			var ext = getMimeType(fileInfo?.extension)
+			var base64Data = fileInfo.file
+			const byteCharacters = atob(base64Data)
+			const byteNumbers = new Array(byteCharacters.length)
+			for (let i = 0; i < byteCharacters.length; i++) {
+				byteNumbers[i] = byteCharacters.charCodeAt(i)
+			}
+			const byteArray = new Uint8Array(byteNumbers)
+			const file = new File([byteArray], fileInfo.fileName, { type: ext })
+			dataTransfer.items.add(file)
+		})
+		console.log('dataTransfer.files', dataTransfer.files)
+		return dataTransfer.files
+	} else {
+		passErrorToMFiles()
+	}
 }
 
 function getFile() {
