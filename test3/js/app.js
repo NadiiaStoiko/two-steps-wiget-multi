@@ -11,7 +11,7 @@ window.addEventListener('message', event => {
 		if (event.data.file.length) {
 			fileForSign = event.data.file
 		} else {
-			passErrorToMFiles()
+			passErrorToMFiles(event.data)
 		}
 	}
 
@@ -63,12 +63,23 @@ function sendSignedDataToParent(stringBase64) {
 	)
 }
 
-function passErrorToMFiles() {
+function passErrorToMFiles(data) {
+	let errMsg = ''
+	if (!data.isFileToBig && !data.isFileEmpty) {
+		errMsg = 'Нажаль передача файлів не відбулась, спобуйте, будь-ласка ще раз'
+	}
+	if (data.isFileToBig) {
+		errMsg =
+			'Документ містить файл або файли що є пустими, будь-ласка, перевірте файл/и, та спробуйте знову'
+	}
+	if (data.isFileEmpty) {
+		errMsg =
+			'Документ містить файл або файли що є занадто великим/и( обсяг перевищує 25МБ) перевірте файл/и, та спробуйте знову'
+	}
 	window.parent.postMessage(
 		{
 			type: 'signed-data-error',
-			errMsg:
-				'Нажаль передача файлів не відбулась, спобуйте, будь-ласка ще раз',
+			errMsg,
 		},
 		'*'
 	)
