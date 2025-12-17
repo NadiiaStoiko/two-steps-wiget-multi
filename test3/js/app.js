@@ -11,7 +11,7 @@ window.addEventListener('message', event => {
 	console.log('event', event.data.isItStamp)
 	if (event.data.file) {
 		if (event.data.file.length) {
-			fileForSign = file
+			fileForSign = event.data.file
 		} else {
 			passErrorToMFiles(event.data)
 		}
