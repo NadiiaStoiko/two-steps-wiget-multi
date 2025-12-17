@@ -4,12 +4,14 @@ let fileName = ''
 let isItStamp = false
 let isItMulti = false
 let resultsArr = []
+let companyEdrpou = undefined
+let signerIpn = undefined
 
 window.addEventListener('message', event => {
 	console.log('event', event.data.isItStamp)
 	if (event.data.file) {
 		if (event.data.file.length) {
-			fileForSign = event.data.file
+			fileForSign = file
 		} else {
 			passErrorToMFiles(event.data)
 		}
@@ -23,6 +25,14 @@ window.addEventListener('message', event => {
 	}
 	console.log('isItStamp', isItStamp)
 	console.log('fileForSign:', fileForSign)
+	if (event.data.ourCompanyEdrpou) {
+		companyEdrpou = event.data.ourCompanyEdrpou
+	}
+	if (event.data.signerIpn) {
+		signerIpn = event.data.signerIpn
+	}
+	console.log('companyEdrpou', companyEdrpou)
+	console.log('signerIpn ', signerIpn)
 })
 
 function fileNameCreatorUtil(certInfo) {
