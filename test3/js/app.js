@@ -6,6 +6,14 @@ let isItMulti = false
 let resultsArr = []
 let companyEdrpou = undefined
 let signerIpn = undefined
+let certChecked = false
+let stampCertNotValidByCompany = false
+let stampCertNotValidByPerson = false
+let stampCertNotValid = false
+let signCertNotValid = false
+let signCertNotValidByCompany = false
+let signCertNotValidByPerson = false
+let signCertIsNotKey = false
 
 window.addEventListener('message', event => {
 	console.log('event', event.data.isItStamp)
@@ -70,6 +78,101 @@ function sendSignedDataToParent(stringBase64) {
 			signatures: signedFilesArr,
 		},
 		'*' // або вкажи конкретний origin замість '*', наприклад: 'http://localhost:81'
+	)
+}
+
+function checkCertsInfo(certificatesInfo) {
+	console.log('certificatesInfo', certificatesInfo)
+	let edrpou = certificatesInfo.certificatesInfo[0].infoEx.subjEDRPOUCode
+	let ipn = certificatesInfo.certificatesInfo[0].infoEx.subjDRFOCode
+	console.log('ipn type', typeof ipn)
+	console.log('isItStamp in check fn', isItStamp)
+	//фільтруємо чи це підпис чи печатка за аліасом WfState
+	if (isItStamp) {
+		// якщо печатка то має бути тільки єдрпоу а іпн пустий
+		console.log('edrpou', edrpou)
+		if (edrpou && edrpou === companyEdrpou && !ipn) {
+			certChecked = true
+		} else if (edrpou && edrpou !== companyEdrpou && !ipn) {
+			stampCertNotValidByCompany = true
+		} else if (edrpou && edrpou === companyEdrpou && ipn) {
+			stampCertNotValidByPerson = true
+		} else {
+			stampCertNotValid = true
+		}
+	} else {
+		//випадок підпису посадової особи організації
+		if (edrpou && edrpou === companyEdrpou && ipn === signerIpn) {
+			certChecked = true
+		}
+		if (edrpou && edrpou !== companyEdrpou && ipn === signerIpn) {
+			signCertNotValidByCompany = true
+		}
+		if (edrpou && edrpou === companyEdrpou && ipn !== signerIpn) {
+			signCertNotValidByPerson = true
+		}
+		if (edrpou && edrpou === companyEdrpou && !ipn) {
+			signCertIsNotKey = true
+		}
+
+		//випадок коли просто підпис фізичної особи
+		if (!edrpou && ipn === signerIpn) {
+			certChecked = true
+		}
+		if (!edrpou && ipn !== signerIpn) {
+			signCertNotValidByPerson = true
+		}
+	}
+
+	pasKeyValidationResToMFiles({
+		certChecked,
+		stampCertNotValidByCompany,
+		stampCertNotValidByPerson,
+		signCertNotValidByCompany,
+		signCertNotValidByPerson,
+		signCertIsNotKey,
+		stampCertNotValid,
+	})
+	console.log('certChecked', certChecked)
+	console.log('signCertNotValidByPerson', signCertNotValidByPerson)
+	console.log('signCertNotValidByCompany', signCertNotValidByCompany)
+	console.log('stampCertNotValidByCompany', stampCertNotValidByCompany)
+	console.log('stampCertNotValidByPerson', stampCertNotValidByPerson)
+	console.log('stampCertNotValid', stampCertNotValid)
+}
+
+function pasKeyValidationResToMFiles(checkRes) {
+	let validationMsg = ''
+	if (checkRes.signCertNotValidByPerson) {
+		validationMsg =
+			'Нажаль обраний Вами ключ, не належить підписанту, спобуйте, будь-ласка ще раз'
+	}
+	if (checkRes.signCertNotValidByCompany) {
+		validationMsg =
+			'Нажаль обраний Вами сертифікат ключа, не відповідає компанії від якої здійснюється підпис, спобуйте, будь-ласка ще раз'
+	}
+	if (checkRes.stampCertNotValidByCompany) {
+		validationMsg =
+			'Нажаль обраний Вами сертифікат печатки, не відповідає компанії від якої здійснюється накладання печатки, спобуйте, будь-ласка ще раз'
+	}
+	if (checkRes.stampCertNotValidByPerson) {
+		validationMsg =
+			'Нажаль обраний Вами сертифікат, не є серифікатом печатки, спобуйте, будь-ласка ще раз'
+	}
+	if (checkRes.signCertIsNotKey) {
+		validationMsg =
+			'Нажаль обраний Вами сертифікат, не є сертифікатом ключа, спобуйте, будь-ласка ще раз'
+	}
+	if (checkRes.stampCertNotValid) {
+		validationMsg =
+			'Нажаль обраний Вами сертифікат печатки, не є валідним, спобуйте, будь-ласка ще раз'
+	}
+	window.parent.postMessage(
+		{
+			type: 'key-validation-result',
+			validationMsg,
+		},
+		'*'
 	)
 }
 
@@ -21221,6 +21324,7 @@ function uint8ToBase64(uint8Array) {
 						if (!t.m_showPKInfo || e.certificatesInfo.length < 1)
 							t.OnPKeyReaded(e)
 						else {
+							checkCertsInfo(e.certificatesInfo[0].infoEx)
 							var n = $('<div class="Block">'),
 								r = e.certificatesInfo,
 								i = r[0],
