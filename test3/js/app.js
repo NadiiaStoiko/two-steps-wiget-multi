@@ -98,7 +98,10 @@ function checkCertsInfo(certificatesInfo) {
 			stampCertNotValidByCompany = true
 		} else if (edrpou && edrpou === companyEdrpou && ipn) {
 			stampCertNotValidByPerson = true
-		} else {
+		}  else if (!edrpou) {
+			stampCertNotValidByPerson = true
+		}
+		else {
 			stampCertNotValid = true
 		}
 	} else {
