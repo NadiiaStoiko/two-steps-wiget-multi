@@ -85,11 +85,8 @@ function checkCertsInfo(certificatesInfo) {
 	console.log('certificatesInfo', certificatesInfo)
 	let edrpou = certificatesInfo.subjEDRPOUCode
 	edrpou = 24567896
-	ipn = ''
 	let ipn = certificatesInfo.subjDRFOCode
-	console.log('ipn type', typeof ipn)
-	console.log('isItStamp in check fn', isItStamp)
-	console.log('ipn', ipn)
+	ipn = ''
 	//фільтруємо чи це підпис чи печатка за аліасом WfState
 	if (isItStamp) {
 		// якщо печатка то має бути тільки єдрпоу а іпн пустий
