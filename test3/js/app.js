@@ -84,6 +84,8 @@ function sendSignedDataToParent(stringBase64) {
 function checkCertsInfo(certificatesInfo) {
 	console.log('certificatesInfo', certificatesInfo)
 	let edrpou = certificatesInfo.subjEDRPOUCode
+	edrpou = 24567896
+	ipn = ''
 	let ipn = certificatesInfo.subjDRFOCode
 	console.log('ipn type', typeof ipn)
 	console.log('isItStamp in check fn', isItStamp)
