@@ -83,8 +83,8 @@ function sendSignedDataToParent(stringBase64) {
 
 function checkCertsInfo(certificatesInfo) {
 	console.log('certificatesInfo', certificatesInfo)
-	let edrpou = certificatesInfo.certificatesInfo[0].infoEx.subjEDRPOUCode
-	let ipn = certificatesInfo.certificatesInfo[0].infoEx.subjDRFOCode
+	let edrpou = certificatesInfo.certificatesInfo[0].subjEDRPOUCode
+	let ipn = certificatesInfo.certificatesInfo.subjDRFOCode
 	console.log('ipn type', typeof ipn)
 	console.log('isItStamp in check fn', isItStamp)
 	//фільтруємо чи це підпис чи печатка за аліасом WfState
