@@ -39,8 +39,6 @@ window.addEventListener('message', event => {
 	if (event.data.signerIpn) {
 		signerIpn = event.data.signerIpn
 	}
-	console.log('companyEdrpou', companyEdrpou)
-	console.log('signerIpn ', signerIpn)
 })
 
 function fileNameCreatorUtil(certInfo) {
@@ -85,11 +83,14 @@ function checkCertsInfo(certificatesInfo) {
 	console.log('certificatesInfo', certificatesInfo)
 	let edrpou = certificatesInfo.subjEDRPOUCode
 	let ipn = certificatesInfo.subjDRFOCode
-	ipn = '14281534'
+	console.log('companyEdrpou', companyEdrpou)
+	console.log('signerIpn ', signerIpn)
+		console.log('edrpou', edrpou)
+		console.log('ipn', ipn)
 	//фільтруємо чи це підпис чи печатка за аліасом WfState
 	if (isItStamp) {
 		// якщо печатка то має бути тільки єдрпоу а іпн пустий
-		console.log('edrpou', edrpou)
+
 		if (edrpou && edrpou === companyEdrpou && !ipn) {
 			certChecked = true
 		} else if (edrpou && edrpou !== companyEdrpou && !ipn) {
