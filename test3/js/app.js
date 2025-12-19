@@ -86,7 +86,6 @@ function checkCertsInfo(certificatesInfo) {
 	let edrpou = certificatesInfo.subjEDRPOUCode
 	edrpou = 24567896
 	let ipn = certificatesInfo.subjDRFOCode
-	ipn = ''
 	//фільтруємо чи це підпис чи печатка за аліасом WfState
 	if (isItStamp) {
 		// якщо печатка то має бути тільки єдрпоу а іпн пустий
@@ -114,7 +113,7 @@ function checkCertsInfo(certificatesInfo) {
 		if (edrpou && edrpou === companyEdrpou && ipn !== signerIpn) {
 			signCertNotValidByPerson = true
 		}
-		if (edrpou && edrpou === companyEdrpou && !ipn) {
+		if (!ipn ) {
 			signCertIsNotKey = true
 		}
 
