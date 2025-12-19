@@ -84,8 +84,8 @@ function sendSignedDataToParent(stringBase64) {
 function checkCertsInfo(certificatesInfo) {
 	console.log('certificatesInfo', certificatesInfo)
 	let edrpou = certificatesInfo.subjEDRPOUCode
-	edrpou = 24567896
 	let ipn = certificatesInfo.subjDRFOCode
+	edrpou = '14281534'
 	//фільтруємо чи це підпис чи печатка за аліасом WfState
 	if (isItStamp) {
 		// якщо печатка то має бути тільки єдрпоу а іпн пустий
@@ -96,10 +96,9 @@ function checkCertsInfo(certificatesInfo) {
 			stampCertNotValidByCompany = true
 		} else if (edrpou && edrpou === companyEdrpou && ipn) {
 			stampCertNotValidByPerson = true
-		}  else if (!edrpou) {
+		} else if (!edrpou) {
 			stampCertNotValidByPerson = true
-		}
-		else {
+		} else {
 			stampCertNotValid = true
 		}
 	} else {
@@ -113,7 +112,7 @@ function checkCertsInfo(certificatesInfo) {
 		if (edrpou && edrpou === companyEdrpou && ipn !== signerIpn) {
 			signCertNotValidByPerson = true
 		}
-		if (!ipn ) {
+		if (!ipn) {
 			signCertIsNotKey = true
 		}
 
