@@ -125,15 +125,18 @@ function checkCertsInfo(certificatesInfo) {
 		}
 	}
 
-	pasKeyValidationResToMFiles({
-		certChecked,
-		stampCertNotValidByCompany,
-		stampCertNotValidByPerson,
-		signCertNotValidByCompany,
-		signCertNotValidByPerson,
-		signCertIsNotKey,
-		stampCertNotValid,
-	})
+	if (!certChecked) {
+		pasKeyValidationResToMFiles({
+			certChecked,
+			stampCertNotValidByCompany,
+			stampCertNotValidByPerson,
+			signCertNotValidByCompany,
+			signCertNotValidByPerson,
+			signCertIsNotKey,
+			stampCertNotValid,
+		})
+	}
+
 	console.log('certChecked', certChecked)
 	console.log('signCertNotValidByPerson', signCertNotValidByPerson)
 	console.log('signCertNotValidByCompany', signCertNotValidByCompany)
@@ -168,13 +171,16 @@ function pasKeyValidationResToMFiles(checkRes) {
 		validationMsg =
 			'Нажаль обраний Вами сертифікат печатки, не є валідним, спобуйте, будь-ласка ще раз'
 	}
-	window.parent.postMessage(
-		{
-			type: 'key-validation-result',
-			validationMsg,
-		},
-		'*'
-	)
+
+	if (validationMsg !== '') {
+		window.parent.postMessage(
+			{
+				type: 'key-validation-result',
+				validationMsg,
+			},
+			'*'
+		)
+	}
 }
 
 function passErrorToMFiles(data) {
@@ -190,13 +196,15 @@ function passErrorToMFiles(data) {
 		errMsg =
 			'Документ містить файл або файли що є занадто великим/и (обсяг перевищує 25МБ), перевірте файл/и та спробуйте знову'
 	}
-	window.parent.postMessage(
-		{
-			type: 'signed-data-error',
-			errMsg,
-		},
-		'*'
-	)
+	if (errMsg !== '') {
+		window.parent.postMessage(
+			{
+				type: 'signed-data-error',
+				errMsg,
+			},
+			'*'
+		)
+	}
 }
 
 function filesArrCreator() {
